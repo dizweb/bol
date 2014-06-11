@@ -9,7 +9,7 @@ Step 1: drawing a circle around with E Spell Range
 ]]
 local ts
 local QREADY, WREADY, EREADY, RREADY = false, false, false, false
-local ERANGE = nil
+local ERANGE 
 
 
 -- dizTristana Chat Notify
@@ -64,6 +64,6 @@ if Config.combo and ts.target then
 	if QREADY and GetDistance(ts.target) < myHero.range + 65 then
 		CastSpell(_Q)
 	end
-
+end
 
 
