@@ -1,0 +1,69 @@
+--[[
+
+dizTristana  
+
+Version 0.01
+Step 1: drawing a circle around with E Spell Range
+
+
+]]
+local ts
+local QREADY, WREADY, EREADY, RREADY = false, false, false, false
+local ERANGE = nil
+
+
+-- dizTristana Chat Notify
+if myHero.charName ~= "Tristana" then return end 
+
+function OnLoad()
+	Menu()
+end
+
+
+function Menu()
+	Config = scriptConfig("Tristana", "dizTrana")
+	Config.addParam("combo", "Combo", SCRIPT_PARAM_ONKEYDOWN, false, 32)
+	Config.addParam("harass", "Harass", SCRIPT_PARAM_ONKEYDOWN, false, 20)
+
+	ts = TargetSelector(TARGET_LOW_HP_PRIORITY, 1000)
+	PrintChat ("<font color='#0000FF'> dizTrana loaded")
+end
+
+-- E Range Circle
+function OnDraw ()
+	DrawCircle(myHero.x, myHero.y, myHero.z, myHero.GetSpellData(_E).Range + 65, 0x111111 )
+end
+
+--[[ 
+
+Version 0.02
+auto E if enemy in range & Harras key pressed
+
+]]
+
+function OnTick
+	ts.update()
+
+QREADY = (myHero:CanUseSPell(_Q) == READY)
+WREADY = (myHero:CanUseSPell(_W) == READY)
+EREADY = (myHero:CanUseSPell(_E) == READY)
+RREADY = (myHero:CanUseSPell(_R) == READY)
+
+ERANGE = (myHero:GetSpellData(_E).range + 65)
+
+if Config.harass and ts.target then
+	if EREADY and GetDistance(ts.target) < ERANGE then
+		CastSpell(_E, ts.target)
+	end
+end
+
+if Config.combo and ts.target then
+	if EREADY and GetDistance(ts.target) < ERANGE then
+		CastSpell(_E, ts.target)
+	end
+	if QREADY and GetDistance(ts.target) < myHero.range + 65 then
+		CastSpell(_Q)
+	end
+
+
+
